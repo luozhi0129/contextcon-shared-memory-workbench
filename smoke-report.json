@@ -1,0 +1,265 @@
+{
+  "steps": [
+    {
+      "name": "conversation_create",
+      "ok": true,
+      "out": {
+        "id": "6c87d62dbf914bc28c50c6d8eb15efef",
+        "agent_id": "smoke-test",
+        "user_id": "<redacted-account-id>",
+        "app_id": null,
+        "run_id": null,
+        "title": "contextcon smoke test 2026-11-25",
+        "metadata": {},
+        "created_at": "2026-11-25T02:32:04.122144+00:00",
+        "updated_at": "2026-11-25T02:32:04.122144+00:00"
+      }
+    },
+    {
+      "name": "datapack_list",
+      "ok": true,
+      "out": [
+        {
+          "created_at": "2026-11-25T02:25:55.542306Z",
+          "updated_at": "2026-11-25T02:25:55.542306Z",
+          "datapack_id": "3db7e106-f86d-4e6f-a71e-794669012869",
+          "datapack_name": "meko_default_datapack",
+          "grant": "owner",
+          "user_id": "<redacted-account-id>",
+          "created_by_agent_id": "meko_agent",
+          "datapack_owner_name": "\u667a \u7f57",
+          "datapack_owner_email_id": "luozhi0129@gmail.com"
+        }
+      ]
+    },
+    {
+      "name": "datapack_create",
+      "ok": true,
+      "out": {
+        "datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661",
+        "agent_id": "meko_agent",
+        "name": "contextcon-workbench"
+      }
+    },
+    {
+      "name": "memory_add[researcher]",
+      "ok": true,
+      "out": {
+        "results": [
+          {
+            "id": "fadbcf28-41d0-48be-aca4-2d7812df97fe",
+            "memory": "SMOKE TEST 2026-11-25: researcher found that the bounty pays $10, source is the task page.",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    },
+    {
+      "name": "memory_add[coder]",
+      "ok": true,
+      "out": {
+        "results": [
+          {
+            "id": "ab720385-4ef4-49c6-ac78-baab977f7819",
+            "memory": "SMOKE TEST 2026-11-25: coder chose Python stdlib only, no new dependencies.",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    },
+    {
+      "name": "memory_add[reviewer]",
+      "ok": true,
+      "out": {
+        "results": [
+          {
+            "id": "a8e9fc81-40d3-4b7a-bfb2-54221511732b",
+            "memory": "SMOKE TEST 2026-11-25: reviewer requires every number to trace to a run log.",
+            "event": "ADD",
+            "actor_id": null,
+            "role": "user"
+          }
+        ]
+      }
+    },
+    {
+      "name": "context_search[fresh agent]",
+      "ok": true,
+      "out": {
+        "results": {
+          "knowledge_base": [],
+          "memory": [
+            {
+              "id": "fadbcf28-41d0-48be-aca4-2d7812df97fe",
+              "memory": "SMOKE TEST 2026-11-25: researcher found that the bounty pays $10, source is the task page.",
+              "hash": "721d0b3d7141cd50c34eb08e410781aa",
+              "metadata": {
+                "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+              },
+              "score": 0.3134768454163384,
+              "created_at": "2026-11-25T02:32:06.827640+00:00",
+              "updated_at": "2026-11-25T02:32:06.827640+00:00",
+              "raw_similarity_score": 0.595582758584483,
+              "user_id": "<redacted-account-id>",
+              "agent_id": "researcher",
+              "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+              "role": "user"
+            },
+            {
+              "id": "a8e9fc81-40d3-4b7a-bfb2-54221511732b",
+              "memory": "SMOKE TEST 2026-11-25: reviewer requires every number to trace to a run log.",
+              "hash": "89be80426c39dcf7c8cabc25884a67d4",
+              "metadata": {
+                "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+              },
+              "score": 0.19374471774084356,
+              "created_at": "2026-11-25T02:32:08.750571+00:00",
+              "updated_at": "2026-11-25T02:32:08.750571+00:00",
+              "raw_similarity_score": 0.19374471774084356,
+              "user_id": "<redacted-account-id>",
+              "agent_id": "reviewer",
+              "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+              "role": "user"
+            },
+            {
+              "id": "ab720385-4ef4-49c6-ac78-baab977f7819",
+              "memory": "SMOKE TEST 2026-11-25: coder chose Python stdlib only, no new dependencies.",
+              "hash": "b67c360390bc5501fd1d639986347612",
+              "metadata": {
+                "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+              },
+              "score": 0.1392316634333901,
+              "created_at": "2026-11-25T02:32:07.800416+00:00",
+              "updated_at": "2026-11-25T02:32:07.800416+00:00",
+              "raw_similarity_score": 0.1392316634333901,
+              "user_id": "<redacted-account-id>",
+              "agent_id": "coder",
+              "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+              "role": "user"
+            }
+          ],
+          "conversation": {
+            "hits": [],
+            "thread": []
+          }
+        },
+        "token_savings": {
+          "total_tokens": 10000,
+          "memory": {
+            "tokens_sent": 600,
+            "tokens_saved": 9400
+          },
+          "tokens_saved": 9400
+        },
+        "match_quality": "mid",
+        "agent_hint": "Partial match: use these results, and tell the user what is missing."
+      }
+    },
+    {
+      "name": "conversation_add_message",
+      "ok": true,
+      "out": {
+        "error": "agent_id_mismatch",
+        "detail": "Conversation 6c87d62dbf914bc28c50c6d8eb15efef belongs to agent 'None', not 'smoke-test'. Use the agent_id that created the conversation."
+      }
+    }
+  ],
+  "ok": true,
+  "server": {
+    "name": "Meko MCP",
+    "version": "3.2.4"
+  },
+  "conversation_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+  "datapacks": [
+    {
+      "created_at": "2026-11-25T02:25:55.542306Z",
+      "updated_at": "2026-11-25T02:25:55.542306Z",
+      "datapack_id": "3db7e106-f86d-4e6f-a71e-794669012869",
+      "datapack_name": "meko_default_datapack",
+      "grant": "owner",
+      "user_id": "<redacted-account-id>",
+      "created_by_agent_id": "meko_agent",
+      "datapack_owner_name": "\u667a \u7f57",
+      "datapack_owner_email_id": "luozhi0129@gmail.com"
+    }
+  ],
+  "datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661",
+  "memory_ids": [
+    null,
+    null,
+    null
+  ],
+  "recall": {
+    "results": {
+      "knowledge_base": [],
+      "memory": [
+        {
+          "id": "fadbcf28-41d0-48be-aca4-2d7812df97fe",
+          "memory": "SMOKE TEST 2026-11-25: researcher found that the bounty pays $10, source is the task page.",
+          "hash": "721d0b3d7141cd50c34eb08e410781aa",
+          "metadata": {
+            "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+          },
+          "score": 0.3134768454163384,
+          "created_at": "2026-11-25T02:32:06.827640+00:00",
+          "updated_at": "2026-11-25T02:32:06.827640+00:00",
+          "raw_similarity_score": 0.595582758584483,
+          "user_id": "<redacted-account-id>",
+          "agent_id": "researcher",
+          "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+          "role": "user"
+        },
+        {
+          "id": "a8e9fc81-40d3-4b7a-bfb2-54221511732b",
+          "memory": "SMOKE TEST 2026-11-25: reviewer requires every number to trace to a run log.",
+          "hash": "89be80426c39dcf7c8cabc25884a67d4",
+          "metadata": {
+            "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+          },
+          "score": 0.19374471774084356,
+          "created_at": "2026-11-25T02:32:08.750571+00:00",
+          "updated_at": "2026-11-25T02:32:08.750571+00:00",
+          "raw_similarity_score": 0.19374471774084356,
+          "user_id": "<redacted-account-id>",
+          "agent_id": "reviewer",
+          "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+          "role": "user"
+        },
+        {
+          "id": "ab720385-4ef4-49c6-ac78-baab977f7819",
+          "memory": "SMOKE TEST 2026-11-25: coder chose Python stdlib only, no new dependencies.",
+          "hash": "b67c360390bc5501fd1d639986347612",
+          "metadata": {
+            "meko_datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661"
+          },
+          "score": 0.1392316634333901,
+          "created_at": "2026-11-25T02:32:07.800416+00:00",
+          "updated_at": "2026-11-25T02:32:07.800416+00:00",
+          "raw_similarity_score": 0.1392316634333901,
+          "user_id": "<redacted-account-id>",
+          "agent_id": "coder",
+          "run_id": "6c87d62dbf914bc28c50c6d8eb15efef",
+          "role": "user"
+        }
+      ],
+      "conversation": {
+        "hits": [],
+        "thread": []
+      }
+    },
+    "token_savings": {
+      "total_tokens": 10000,
+      "memory": {
+        "tokens_sent": 600,
+        "tokens_saved": 9400
+      },
+      "tokens_saved": 9400
+    },
+    "match_quality": "mid",
+    "agent_hint": "Partial match: use these results, and tell the user what is missing."
+  }
+}

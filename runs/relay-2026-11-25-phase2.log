@@ -1,0 +1,36 @@
+=== researcher ===
+researcher: connected to Meko MCP 3.2.4
+researcher: conversation 493225afd37d4e74afd292389ef16198
+researcher: recall returned 1 memor(ies)
+  recalled: 2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks — (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the d
+researcher: spec already present, reusing memory 615b6c6b-4385-4b3a-95be-a23640cd8b94
+RELAY_JSON {"agent": "researcher", "date": "2026-11-25", "datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661", "conversation_id": "493225afd37d4e74afd292389ef16198", "memory_id": "615b6c6b-4385-4b3a-95be-a23640cd8b94", "recall_count": 1, "recalled": ["2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks \u2014 (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the date, e.g. $10, 30%, 1000 tokens; (3) NAMED FACT: backticked/quoted token, hyphenated slug, 'Label: value', or capitalised proper noun. Implementation: `scripts/memory_gate.py` (stdlib only, importable + CLI), tests in `tests/test_memory_gate.py`, gate version 1.0. Summaries expire 30 days after their date."], "spec": "2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks \u2014 (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the date, e.g. $10, 30%, 1000 tokens; (3) NAMED FACT: backticked/quoted token, hyphenated slug, 'Label: value', or capitalised proper noun. Implementation: `scripts/memory_gate.py` (stdlib only, importable + CLI), tests in `tests/test_memory_gate.py`, gate version 1.0. Summaries expire 30 days after their date."}
+=== coder ===
+coder: connected to Meko MCP 3.2.4
+coder: conversation 46b487a8bb11463286471caa0ec691bb
+coder: recall returned 1 memor(ies)
+  recalled: 2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks — (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the d
+coder: spec recalled — date + number + named fact all present (zero briefing)
+coder: wrote /home/hatch/workspace/makefun/contextcon/scripts/memory_gate.py and /home/hatch/workspace/makefun/contextcon/tests/test_memory_gate.py
+coder: probe no-date: want_ok=False got_ok=False failures=['date'] -> OK
+coder: probe no-number: want_ok=False got_ok=False failures=['number'] -> OK
+coder: probe no-named-fact: want_ok=False got_ok=False failures=['named_fact'] -> OK
+coder: probe good: want_ok=True got_ok=True failures=[] -> OK
+coder: test suite: 11 tests, OK
+['Ran 11 tests in 0.002s', '', 'OK']
+coder: result memory written (gated), id=13b7803a-ad20-4218-9c04-1202adf18b5b
+RELAY_JSON {"agent": "coder", "date": "2026-11-25", "datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661", "conversation_id": "46b487a8bb11463286471caa0ec691bb", "memory_id": "13b7803a-ad20-4218-9c04-1202adf18b5b", "recall_count": 1, "recalled": ["2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks \u2014 (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the date, e.g. $10, 30%, 1000 tokens; (3) NAMED FACT: backticked/quoted token, hyphenated slug, 'Label: value', or capitalised proper noun. Implementation: `scripts/memory_gate.py` (stdlib only, importable + CLI), tests in `tests/test_memory_gate.py`, gate version 1.0. Summaries expire 30 days after their date."], "tests_run": 11, "tests_passed": 11, "probes": [{"probe": "no-date", "want_ok": false, "got_ok": false, "failures": ["date"], "correct": true}, {"probe": "no-number", "want_ok": false, "got_ok": false, "failures": ["number"], "correct": true}, {"probe": "no-named-fact", "want_ok": false, "got_ok": false, "failures": ["named_fact"], "correct": true}, {"probe": "good", "want_ok": true, "got_ok": true, "failures": [], "correct": true}], "result": "2026-11-25 coder result: wrote `scripts/memory_gate.py` (gate v1.0, 3 checks) and `tests/test_memory_gate.py` (11 cases). Test run: 11 passed, 0 failed, 0 errors. Gate self-check: 4 failure modes probed, 4 correct. Files: 2 created, 0 modified."}
+=== reviewer ===
+reviewer: connected to Meko MCP 3.2.4
+reviewer: conversation 1b08e0980ff94106a3d3a47972b83e48
+reviewer: recall returned 2 memor(ies)
+  recalled: 2026-11-25 coder result: wrote `scripts/memory_gate.py` (gate v1.0, 3 checks) and `tests/test_memory_gate.py` (11 cases). Test run: 11 passe
+  recalled: 2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks — (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the d
+reviewer: coder result recalled — memory_gate + passed present (zero briefing)
+reviewer: independent test re-run: 11 tests, OK
+reviewer: probe no-date: want_ok=False got_ok=False failures=['date'] -> OK
+reviewer: probe no-number: want_ok=False got_ok=False failures=['number'] -> OK
+reviewer: probe no-named-fact: want_ok=False got_ok=False failures=['named_fact'] -> OK
+reviewer: probe good: want_ok=True got_ok=True failures=[] -> OK
+reviewer: verdict memory written (gated), id=e29e7489-584a-444c-8e82-b94550677cad
+RELAY_JSON {"agent": "reviewer", "date": "2026-11-25", "datapack_id": "c2f6a0e2-b841-49bb-8b18-117a90339661", "conversation_id": "1b08e0980ff94106a3d3a47972b83e48", "memory_id": "e29e7489-584a-444c-8e82-b94550677cad", "recall_count": 2, "recalled": ["2026-11-25 coder result: wrote `scripts/memory_gate.py` (gate v1.0, 3 checks) and `tests/test_memory_gate.py` (11 cases). Test run: 11 passed, 0 failed, 0 errors. Gate self-check: 4 failure modes probed, 4 correct. Files: 2 created, 0 modified.", "2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks \u2014 (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the date, e.g. $10, 30%, 1000 tokens; (3) NAMED FACT: backticked/quoted token, hyphenated slug, 'Label: value', or capitalised proper noun. Implementation: `scripts/memory_gate.py` (stdlib only, importable + CLI), tests in `tests/test_memory_gate.py`, gate version 1.0. Summaries expire 30 days after their date."], "tests_run": 11, "tests_passed": 11, "probes": [{"probe": "no-date", "want_ok": false, "got_ok": false, "failures": ["date"], "correct": true}, {"probe": "no-number", "want_ok": false, "got_ok": false, "failures": ["number"], "correct": true}, {"probe": "no-named-fact", "want_ok": false, "got_ok": false, "failures": ["named_fact"], "correct": true}, {"probe": "good", "want_ok": true, "got_ok": true, "failures": [], "correct": true}], "verdict": "PASS", "result": "2026-11-25 reviewer verdict: PASS. Re-ran `tests/test_memory_gate.py` independently: 11 passed, 0 failed. Adversarial probes: 4/4 correct (no-date rejected, no-number rejected, no-named-fact rejected, good summary accepted). Gate matches the researcher spec of 2026-11-25 (3 checks). No blocking issues."}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token-waste comparison — measured</title>
+<style>body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 880px;
+  padding: 0 1rem; color: #1a1a1a; line-height: 1.55; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+code { background: #f6f6f6; padding: 0.15em 0.3em; }
+pre { background: #f6f6f6; padding: 1rem; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+a { color: #0b5fff; }
+nav { margin-bottom: 1.5rem; font-size: 0.95rem; }
+nav a { margin-right: 1rem; }
+</style></head><body>
+<nav><a href="index.html">Home</a><a href="audit.html">Audit view</a><a href="comparison.html">Token comparison</a><a href="presentation.html">Presentation</a><a href="https://github.com/luozhi0129/contextcon-shared-memory-workbench">GitHub repo</a></nav>
+<h1>Token-waste comparison — measured, 2026-11-25</h1>
+<p>Relay run: <code>runs/relay-2026-11-25.jsonl</code> (fresh re-run, 3/3 agents, verdict PASS). Fresh memory ids: researcher spec <code>615b6c6b…</code> (reused), coder result <code>0e7b1f0b…</code>, reviewer verdict <code>570e5ae9…</code>. Counting: <strong>exact cl100k_base tokens</strong>, counted locally with <code>scripts/cl100k.py</code> (pure-stdlib BPE over the vendored ranks file <code>data/cl100k_base.tiktoken</code>; validated in <code>tests/test_cl100k.py</code> — canonical vectors &quot;hello world&quot; → 2, pangram → 9, &quot;12345&quot; → 2, plus round-trips on every measured text). No estimate, no tokenizer API, no invented numbers.</p>
+<h2>Measured comparison (one relay, this datapack, this run)</h2>
+<table><thead><tr><th>agent</th><th>WITH Meko (query + recalled)</th><th>WITHOUT Meko (re-paste)</th><th>saving</th></tr></thead><tbody>
+<tr><td>researcher</td><td>307 (143 words)</td><td>294 (132 words)</td><td>-13</td></tr>
+<tr><td>coder</td><td>308 (144 words)</td><td>195 (84 words)</td><td>-113</td></tr>
+<tr><td>reviewer</td><td>385 (177 words)</td><td>341 (139 words)</td><td>-44</td></tr>
+<tr><td><strong>total</strong></td><td><strong>1000</strong></td><td><strong>830</strong></td><td><strong>-170 (-20.5%)</strong></td></tr>
+</tbody></table>
+<ul><li>WITH Meko = the agent&#x27;s recall query + the memory texts its <code>context_search</code></li></ul>
+<p>actually returned (from the run log, verbatim). Researcher recalled 3, coder 3, reviewer 4. - WITHOUT Meko = the full texts that would have to be pasted to give the agent the same information: researcher — the 3 distinct task memories (to check whether the spec exists); coder — spec + researcher trace; reviewer — spec + coder result + researcher trace + coder trace. This is the <strong>minimal</strong> paste: a real human briefing a fresh agent would paste at least this much, usually more (the whole thread, to be safe). - The trace turns are reconstructed from <code>agents/*.py</code> (verified by grep in the measurement script) + the memory ids in the run log — see the note below on why they are reconstructions, not stored copies.</p>
+<h2>What the measurement actually says</h2>
+<p>At this scale — 5 memories, 3 traces, one relay — <strong>recall costs about the same as re-pasting, and slightly more (170 tokens, 20.5% on this run)</strong>. The reason is visible in the run log: retrieval is imprecise at small scale. The reviewer&#x27;s recall returned the coder result <strong>twice</strong> (identical text, two memory ids) plus a verdict it did not need; the researcher and coder each recalled 3 memories when 1 would do. The re-paste baseline, by contrast, is exactly the texts needed and nothing else.</p>
+<p>That is the honest result for a toy relay — and it is the point. The saving is not in a single handoff at toy scale; it is in how the two costs <strong>grow</strong>:</p>
+<ul><li>Re-paste grows with history: every new memory and every new trace turn</li></ul>
+<p>has to be pasted again at the next handoff. - Recall stays bounded by the retrieval limit (5 memories here): the agent asks a question and gets the top matches back, however long the history is.</p>
+<h2>Projection (model from measured per-unit costs, NOT a measurement)</h2>
+<p>Measured per-unit costs: one memory ≈ 98 tokens (mean of the 3 distinct task memories), one trace turn ≈ 62 tokens (mean of the 3 traces). Each further relay iteration adds ≈ 381 tokens to the paste baseline (2 new memories + 3 new traces). The recall cost stays near its measured per-relay level (1000 tokens) because each agent&#x27;s recall is capped at the configured limit of 5 memories; the formal ceiling is 2037 tokens (3 agents × (longest query + 5 × longest memory)). Totals are per relay (all three agents).</p>
+<table><thead><tr><th>memories in datapack</th><th>re-paste baseline (tokens)</th><th>recall per relay (tokens)</th></tr></thead><tbody>
+<tr><td>5</td><td>830</td><td>≈ 1000</td></tr>
+<tr><td>7</td><td>1211</td><td>≈ 1000</td></tr>
+<tr><td>10</td><td>1592</td><td>≈ 1000</td></tr>
+<tr><td>20</td><td>3497</td><td>≈ 1000</td></tr>
+<tr><td>30</td><td>5402</td><td>≈ 1000</td></tr>
+</tbody></table>
+<p>Assumptions, stated plainly: history grows by whole relay iterations (2 new memories + 3 new traces each); each new memory/trace costs the measured mean; retrieval never returns more than the configured limit of 5 memories. If the task&#x27;s memories get longer, the paste baseline grows faster; the recall level does not move. The crossover — where the re-paste baseline first passes the measured recall level — is at roughly 7 memories on this model (one more relay iteration); it passes even the formal recall ceiling (2037 tokens) at roughly 13 memories.</p>
+<h2>Upper bound: paste literally every memory in the datapack</h2>
+<p><code>memory_get_all</code> on 2026-11-25: <strong>5 memories, 455 tokens (202 words)</strong> in total. That is what a &quot;paste everything&quot; briefing would cost today, before any traces are added. (Conversation turns are not counted here: <code>conversation_list</code> returns empty for this account, so the datapack-wide conversation total is not enumerable via the API.)</p>
+<h2>Two findings from this phase (not part of the token count)</h2>
+<p>1. <strong>Relay trace turns were never persisted.</strong> <code>agents/common.py::trace()</code> passed <code>datapack_id</code> to <code>conversation_add_message</code>, which the server rejects with <code>not_found</code> (the conversation is created without a datapack_id, so it lives in the default datapack). The drivers never checked the return value, so 6 trace calls across the two relay runs silently failed. The trace texts in this comparison are therefore reconstructions from source + run log (exact strings), not stored copies. Fixed in this change: <code>trace()</code> no longer passes <code>datapack_id</code>. Verified by direct probe: the same call without <code>datapack_id</code> returns <code>status: accepted</code> and the turn appears in <code>conversation_get</code> ~1 minute later (async indexing — an immediate re-get still shows 0 messages). <code>USAGE.md</code>&#x27;s earlier line &quot;conversation_add_message accepted: 6&quot; was inferred, not verified, and is corrected there. 2. <strong><code>context_search</code> responses carry a <code>token_savings</code> field</strong> (<code>total_tokens: 10000</code> on the probe call). Its definition is unverified — it did not move in an obvious way and 10000 is suspiciously round — so it is <strong>not used as evidence</strong> anywhere in this comparison.</p>
+<h2>Sources of every number</h2>
+<ul><li>Queries: <code>agents/researcher.py</code>, <code>agents/coder.py</code>, <code>agents/reviewer.py</code></li></ul>
+<p>(verified by grep in <code>scripts/measure_tokens.py</code>). - Recalled texts + memory ids: <code>runs/relay-2026-11-25.jsonl</code>. - Trace texts: <code>agents/common.py::trace</code> call sites + the run log&#x27;s memory ids and test/probe counts (see finding 1). - Datapack census: live <code>memory_get_all</code>, 5 memories. - Tokenizer: <code>scripts/cl100k.py</code> + <code>data/cl100k_base.tiktoken</code>, validated by <code>tests/test_cl100k.py</code> (6 tests). - Meko calls spent by this phase: 3 <code>context_search</code> (fresh relay) + 1 <code>context_search</code> (conversation-bucket probe) + 2 <code>memory_add</code> (fresh coder + reviewer results; researcher reused the spec) + 3 <code>conversation_create</code> (fresh relay) + 1 <code>conversation_create</code> (trace fetch) + 1 <code>conversation_create</code> (memory census) + 3 <code>conversation_get</code> (trace fetch) + 3 <code>conversation_get</code> (probes) + 1 <code>conversation_add_message</code> probe (accepted) + 1 <code>conversation_add_message</code> probe (failed, not_found — the bug above) + 1 <code>memory_get_all</code> page (census).</p>
+</body></html>

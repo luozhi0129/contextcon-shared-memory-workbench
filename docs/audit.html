@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Shared-Memory Workbench — Memory Audit</title>
+<style>
+body { font-family: system-ui, sans-serif; margin: 2rem; color: #1a1a1a; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+pre { background: #f6f6f6; padding: 1rem; overflow-x: auto; }
+</style><meta name="viewport" content="width=device-width, initial-scale=1">
+</head><body>
+<nav style="margin-bottom:1.5rem;font-size:0.95rem"><a href="index.html">Home</a> · <a href="comparison.html">Token comparison</a> · <a href="presentation.html">Presentation</a> · <a href="https://github.com/luozhi0129/contextcon-shared-memory-workbench">GitHub repo</a></nav>
+
+<h1>Shared-Memory Workbench — Memory Audit</h1>
+<p>Datapack <code>contextcon-workbench</code> (<code>c2f6a0e2-b841-49bb-8b18-117a90339661</code>) ·
+Rendered 2026-11-25 · 3 memor(ies) · Free tier</p>
+<h2>Who knew what, when, based on what</h2>
+<table><tr><th>Agent</th><th>When (UTC)</th><th>Memory</th><th>Based on (conversation)</th><th>Score</th></tr>
+<tr><td>researcher</td><td>2026-11-25 02:38:52</td><td>2026-11-25 researcher spec: memory gate v1.0 enforces 3 checks — (1) DATE: ISO YYYY-MM-DD or Month D, YYYY; (2) NUMBER: digits outside the date, e.g. $10, 30%, 1000 tokens; (3) NAMED FACT: backticked/quoted token, hyphenated slug, &#x27;Label: value&#x27;, or capitalised proper noun. Implementation: `scripts/memory_gate.py` (stdlib only, importable + CLI), tests in `tests/test_memory_gate.py`, gate version 1.0. Summaries expire 30 days after their date.</td><td>researcher — memory gate spec — 2026-11-25</td><td>—</td></tr>
+<tr><td>coder</td><td>2026-11-25 02:39:45</td><td>2026-11-25 coder result: wrote `scripts/memory_gate.py` (gate v1.0, 3 checks) and `tests/test_memory_gate.py` (11 cases). Test run: 11 passed, 0 failed, 0 errors. Gate self-check: 4 failure modes probed, 4 correct. Files: 2 created, 0 modified.</td><td>coder — memory gate implementation — 2026-11-25</td><td>—</td></tr>
+<tr><td>reviewer</td><td>2026-11-25 02:39:51</td><td>2026-11-25 reviewer verdict: PASS. Re-ran `tests/test_memory_gate.py` independently: 11 passed, 0 failed. Adversarial probes: 4/4 correct (no-date rejected, no-number rejected, no-named-fact rejected, good summary accepted). Gate matches the researcher spec of 2026-11-25 (3 checks). No blocking issues.</td><td>reviewer — memory gate review — 2026-11-25</td><td>—</td></tr>
+</table>
+<h2>Relay run 2026-11-25</h2>
+<pre>researcher: recall 1 memor(ies), memory 615b6c6b…
+coder: recall 1 memor(ies), memory 13b7803a…
+reviewer: recall 2 memor(ies), memory e29e7489…</pre>
+<p>Every summary above passed the memory quality gate (date + number +
+named fact) before it was written — except the researcher's spec, which was
+written before the gate existed and was verified to pass afterwards.</p>
+</body></html>

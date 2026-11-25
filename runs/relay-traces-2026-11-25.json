@@ -1,0 +1,53 @@
+{
+  "researcher": {
+    "conversation_id": "a7220b1216c0403db0bf1ee507f25665",
+    "title": "researcher — memory gate spec — 2026-11-25",
+    "raw": {
+      "id": "a7220b1216c0403db0bf1ee507f25665",
+      "agent_id": "meko_agent",
+      "user_id": "<redacted-account-id>",
+      "app_id": null,
+      "run_id": null,
+      "title": "researcher — memory gate spec — 2026-11-25",
+      "metadata": {},
+      "created_at": "2026-11-25 02:50:18.056000+00:00",
+      "updated_at": "2026-11-25 02:50:18.056000+00:00",
+      "message_count": 0,
+      "messages": []
+    }
+  },
+  "coder": {
+    "conversation_id": "846a6eecfea14768b0cfc793626d1653",
+    "title": "coder — memory gate implementation — 2026-11-25",
+    "raw": {
+      "id": "846a6eecfea14768b0cfc793626d1653",
+      "agent_id": "meko_agent",
+      "user_id": "<redacted-account-id>",
+      "app_id": null,
+      "run_id": null,
+      "title": "coder — memory gate implementation — 2026-11-25",
+      "metadata": {},
+      "created_at": "2026-11-25 02:50:23.396000+00:00",
+      "updated_at": "2026-11-25 02:50:23.396000+00:00",
+      "message_count": 0,
+      "messages": []
+    }
+  },
+  "reviewer": {
+    "conversation_id": "8b9a0add959b4136a347e5dc6f79ac53",
+    "title": "reviewer — memory gate review — 2026-11-25",
+    "raw": {
+      "id": "8b9a0add959b4136a347e5dc6f79ac53",
+      "agent_id": "meko_agent",
+      "user_id": "<redacted-account-id>",
+      "app_id": null,
+      "run_id": null,
+      "title": "reviewer — memory gate review — 2026-11-25",
+      "metadata": {},
+      "created_at": "2026-11-25 02:50:30.571000+00:00",
+      "updated_at": "2026-11-25 02:50:30.572000+00:00",
+      "message_count": 0,
+      "messages": []
+    }
+  }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared-Memory Workbench — presentation</title>
+<style>body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 880px;
+  padding: 0 1rem; color: #1a1a1a; line-height: 1.55; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+code { background: #f6f6f6; padding: 0.15em 0.3em; }
+pre { background: #f6f6f6; padding: 1rem; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+a { color: #0b5fff; }
+nav { margin-bottom: 1.5rem; font-size: 0.95rem; }
+nav a { margin-right: 1rem; }
+</style></head><body>
+<nav><a href="index.html">Home</a><a href="audit.html">Audit view</a><a href="comparison.html">Token comparison</a><a href="presentation.html">Presentation</a><a href="https://github.com/luozhi0129/contextcon-shared-memory-workbench">GitHub repo</a></nav>
+<h1>Shared-Memory Workbench — ContextCon presentation</h1>
+<p><strong>Team:</strong> Super Hakimi (solo) · <strong>Context layer:</strong> Meko (free tier) <strong>Repo:</strong> https://github.com/luozhi0129/contextcon-shared-memory-workbench <strong>Demo:</strong> https://luozhi0129.github.io/contextcon-shared-memory-workbench/</p>
+<p>Every number below traces to a run log in the repo (<code>runs/</code>). Nothing is estimated without being labelled as a model.</p>
+<hr>
+<h2>1. The problem</h2>
+<p>When several agents — or one agent over several days — work on the same long task, each handoff starts from zero. The usual fix is to re-paste the whole context: the spec, the previous results, the conversation history. That works until the history gets long, and then it costs tokens on every single handoff, forever.</p>
+<p>The alternative is a shared memory: every agent writes what it learned into one place, and the next agent recalls it instead of being re-briefed. That is what we built — and we measured whether it actually saves anything, instead of assuming it does.</p>
+<h2>2. How we use Meko (30% of the judging)</h2>
+<p>One datapack, <code>contextcon-workbench</code>, holds everything for the project:</p>
+<table><thead><tr><th>Meko surface</th><th>How the workbench uses it</th></tr></thead><tbody>
+<tr><td><code>context_search</code></td><td>The working loop. Every agent recalls before it starts — zero briefing, by construction.</td></tr>
+<tr><td><code>memory_add</code></td><td>Dated, compressed facts (facts / numbers / dates). 9 memories written so far.</td></tr>
+<tr><td><code>conversation_create</code> / <code>conversation_add_message</code></td><td>Decision traces: every agent&#x27;s step is saved as a turn.</td></tr>
+<tr><td><code>memory_get_all</code></td><td>The audit view and the datapack census (5 memories, 455 tokens).</td></tr>
+<tr><td><code>knowledgebase_*</code>, <code>artifact_*</code>, <code>memory_promote</code></td><td>Available for shared documents and promoting private memory to shared knowledge; wired into the client, used as the project grows.</td></tr>
+</tbody></table>
+<p>Free tier only. Usage so far: <strong>13 context searches</strong> of the 1,000 lifetime allowance, <strong>2 of 10 datapacks</strong> (the default one plus the project datapack). No card, no paid plan.</p>
+<h2>3. The relay — three agents, zero briefing</h2>
+<p>One fixed-scope task, run end to end: research, implement, and review the memory quality gate itself.</p>
+<table><thead><tr><th>Agent</th><th>What it did</th><th>What it recalled (zero briefing)</th></tr></thead><tbody>
+<tr><td>Researcher</td><td>Wrote the gate spec (3 checks)</td><td>0 memories — fresh start</td></tr>
+<tr><td>Coder</td><td>Implemented <code>scripts/memory_gate.py</code> + 11 tests, 11/11 pass, 4/4 adversarial probes correct</td><td>1 memory — the spec, verbatim</td></tr>
+<tr><td>Reviewer</td><td>Independently re-ran the suite: 11/11 pass, 4/4 probes correct. Verdict: <strong>PASS</strong></td><td>2 memories — coder result + spec</td></tr>
+</tbody></table>
+<p>Run log: <code>runs/relay-2026-11-25.jsonl</code>. The coder picked up exactly where the researcher stopped, with no briefing pasted. The reviewer verified against the same decision traces.</p>
+<h2>4. The measured comparison — the honest result</h2>
+<p>Same relay, two ways. Tokens counted exactly (cl100k_base, counted locally with <code>scripts/cl100k.py</code>, validated against canonical vectors).</p>
+<table><thead><tr><th>Agent</th><th>WITH Meko (query + recalled)</th><th>WITHOUT Meko (minimal re-paste)</th></tr></thead><tbody>
+<tr><td>Researcher</td><td>307</td><td>294</td></tr>
+<tr><td>Coder</td><td>308</td><td>195</td></tr>
+<tr><td>Reviewer</td><td>385</td><td>341</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>1,000</strong></td><td><strong>830</strong></td></tr>
+</tbody></table>
+<p><strong>At this scale — 5 memories, 3 traces — recall costs slightly MORE: −170 tokens (−20.5%).</strong> We report that, not a saving we did not measure.</p>
+<p>Why: retrieval is imprecise at small scale. The reviewer recalled the coder result twice (identical text, two memory ids) plus a verdict it did not need; the researcher and coder each recalled 3 memories when 1 would do. The re-paste baseline is exactly the texts needed and nothing else.</p>
+<p>But the two costs grow differently, and that is the point:</p>
+<ul><li>Re-paste grows with history: every new memory and every new trace has to be</li></ul>
+<p>pasted again at the next handoff. - Recall stays bounded by the retrieval limit (5 memories here): the agent asks a question and gets the top matches back, however long the history is.</p>
+<p><strong>Projection — a model from measured per-unit costs, NOT a measurement:</strong> one memory ≈ 98 tokens, one trace ≈ 62 tokens, so each further relay iteration adds ≈ 381 tokens to the paste baseline while recall stays near its measured 1,000-token level. The re-paste baseline passes the recall level at <strong>~7 memories</strong> (one more iteration) and the formal recall ceiling (2,037 tokens) at <strong>~13 memories</strong>.</p>
+<table><thead><tr><th>Memories in datapack</th><th>Re-paste baseline</th><th>Recall per relay</th></tr></thead><tbody>
+<tr><td>5 (measured)</td><td>830</td><td>1,000</td></tr>
+<tr><td>7</td><td>1,211</td><td>≈ 1,000</td></tr>
+<tr><td>10</td><td>1,592</td><td>≈ 1,000</td></tr>
+<tr><td>20</td><td>3,497</td><td>≈ 1,000</td></tr>
+<tr><td>30</td><td>5,402</td><td>≈ 1,000</td></tr>
+</tbody></table>
+<p>Upper bound: pasting literally every memory in the datapack today costs 455 tokens (5 memories, <code>memory_get_all</code> census). Full method, assumptions, and sources of every number: <code>runs/token-comparison-2026-11-25.md</code>.</p>
+<h2>5. The memory audit — who knew what, when, based on what</h2>
+<p>The audit view (<code>web/audit.html</code>, live on the demo site) renders the datapack&#x27;s memories with their writer, timestamp, and the conversation each one is based on. Every summary above passed the memory quality gate before it was written.</p>
+<h2>6. The memory quality gate — the differentiator</h2>
+<p>A summary is not a memory until it can be checked. The gate (<code>scripts/memory_gate.py</code>) rejects any summary that lacks any of:</p>
+<p>1. <strong>A date</strong> — ISO <code>YYYY-MM-DD</code> or <code>Month D, YYYY</code>; 2. <strong>A number</strong> — digits outside the date (<code>$10</code>, <code>30%</code>, <code>1000 tokens</code>); 3. <strong>A named fact</strong> — a backticked/quoted token, a hyphenated slug, <code>Label: value</code>, or a capitalised proper noun.</p>
+<p>Enforced in code, not in prose: coder and reviewer both gate their own memories before writing. 11 unit tests pass; 4 adversarial probes (no-date, no-number, no-named-fact, good) all behave correctly — verified twice (coder run + reviewer independent re-run).</p>
+<p>Summaries expire 30 days after their date, so stale facts do not linger. This is the mechanism we run in production on our own QQ bridge, where memory is a 20-turn live window plus ~1,200-word compressed summaries that must state concrete facts, numbers, and dates.</p>
+<h2>7. What we learned (and fixed) by measuring</h2>
+<ul><li><strong>A real bug, found by the measurement:</strong> the relay&#x27;s trace turns were</li></ul>
+<p>never persisted — <code>trace()</code> passed a <code>datapack_id</code> the server rejects with <code>not_found</code>, and the drivers never checked the return value. Six trace calls failed silently across two relay runs. Fixed in Phase 3; the comparison&#x27;s trace texts are reconstructions from source + run log, labelled as such. - <strong><code>context_search</code> returns a <code>token_savings</code> field</strong> (<code>total_tokens: 10000</code> on a probe). Its definition is unverified and the value looks like a placeholder, so it is <strong>not used as evidence</strong> anywhere.</p>
+<h2>8. Run it yourself</h2>
+<pre><code>git clone https://github.com/luozhi0129/contextcon-shared-memory-workbench
+cd contextcon-shared-memory-workbench
+python3 scripts/meko-smoke.py        # needs a Meko API key (free account)
+python3 scripts/run_relay.py         # the three-agent relay
+python3 -m unittest discover -s tests  # 17 tests, stdlib only</code></pre>
+<p>Setup / run instructions: <code>README.md</code>. The demo site hosts the audit view, the full comparison, and the run logs.</p>
+</body></html>
