@@ -105,7 +105,7 @@ Findings (recorded in the comparison doc + `USAGE.md`):
 - `context_search` responses carry a `token_savings` field (`total_tokens:
   10000` on the probe) — definition unverified, NOT used as evidence.
 
-## Phase 4 — Demo link + presentation + video (PART 1 DONE 2026-11-25, repo creation BLOCKED)
+## Phase 4 — Demo link + presentation + video (PART 1 DONE, repo + demo LIVE 2026-11-25 11:23)
 
 - [x] Presentation: `presentation.md` (+ rendered `docs/presentation.html`):
   problem → Meko usage → relay → measured comparison (honest headline) →
@@ -115,20 +115,17 @@ Findings (recorded in the comparison doc + `USAGE.md`):
 - [x] Static demo site in `docs/` (`scripts/render_site.py`): landing
   (`index.html`), audit view, comparison, presentation, run logs + `.nojekyll`.
   Verified locally (tables render, 1000/830 present).
-- [ ] Public repo `contextcon-shared-memory-workbench` — **BLOCKED 2026-11-25:**
-  connector `create_repository` → `403 POST /user/repos: Resource not
-  accessible by integration`. A GitHub App installation token cannot create
-  user repositories; only account linked is luozhi0129 (verified via
-  `accounts`). First `create_repository` attempt was interrupted by a service
-  restart (no effect — repo did not exist afterwards); the retry returned the
-  403. `gh` CLI is not logged in and starting a new auth flow is forbidden
-  by the connector guide. **Next step (parent/browser):** create the EMPTY
-  public repo `contextcon-shared-memory-workbench` under luozhi0129 in the
-  browser (no README/init), then push the local snapshot (commit `01e646d`,
-  41 files) via the connector's `push-files` per
-  `references/snapshot-push.md`, then enable Pages (Settings → Pages,
-  source `main` / `docs`). Intended URLs:
-  https://github.com/luozhi0129/contextcon-shared-memory-workbench and
+- [x] Public repo `contextcon-shared-memory-workbench` — **LIVE 2026-11-25
+  11:19:** the connector's `create_repository` → 403 (GitHub App token
+  cannot create user repos), so the empty public repo was created in the
+  browser, then the 41-file snapshot was pushed via the connector's
+  `push-files` (commit `bb7af0d1ea4eda978812ff4b87bc09c2fe238b50` on `main`,
+  after `list_commits` 409 confirmed the repo was empty; sync record
+  `contextcon.muse-github-snapshot-sync.json` written). Repo:
+  https://github.com/luozhi0129/contextcon-shared-memory-workbench
+- [x] Demo link — **LIVE 2026-11-25 11:23:** Pages enabled in the browser
+  (source `main` / `docs`); verified with curl — home/audit/comparison all
+  HTTP 200, key numbers (1,000 / 830) present. URL:
   https://luozhi0129.github.io/contextcon-shared-memory-workbench/
 - [ ] Demo video ≤ 5 min — record only after the repo + demo link are live.
 

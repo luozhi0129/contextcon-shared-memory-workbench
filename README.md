@@ -55,16 +55,8 @@ Researcher, coder, and reviewer agents relay one bounty across days:
 
 ## Deliverables (HackerEarth)
 
-- [ ] Working demo link (hosted workbench) — site built in `docs/`; needs the
-  repo to exist first, then GitHub Pages enable (Settings → Pages, `main` / `docs`).
-  Intended URL: https://luozhi0129.github.io/contextcon-shared-memory-workbench/
-- [ ] Repo URL (public, open source) — **blocked 2026-11-25:** the GitHub
-  connector's `create_repository` returns 403 (`POST /user/repos: Resource not
-  accessible by integration`) — a GitHub App installation token cannot create
-  user repositories. Fix: create the empty public repo
-  `contextcon-shared-memory-workbench` under luozhi0129 in the browser (no
-  README/init), then push this project with the connector's `push-files`.
-  Intended URL: https://github.com/luozhi0129/contextcon-shared-memory-workbench
+- [x] Working demo link (hosted workbench) — **LIVE:** https://luozhi0129.github.io/contextcon-shared-memory-workbench/ (GitHub Pages, `main` / `docs`; verified HTTP 200 on home/audit/comparison).
+- [x] Repo URL (public, open source) — **LIVE:** https://github.com/luozhi0129/contextcon-shared-memory-workbench (41 files, commit `bb7af0d1`).
 - [ ] Demo video ≤ 5 minutes (script drafted: `video-script.md`)
 - [x] Project presentation — `presentation.md` (+ rendered on the demo site)
 - [x] Setup / run instructions — see below
@@ -73,7 +65,7 @@ Researcher, coder, and reviewer agents relay one bounty across days:
 ## Setup / run instructions
 
 ```bash
-git clone https://github.com/luozhi0129/contextcon-shared-memory-workbench  # once the repo exists
+git clone https://github.com/luozhi0129/contextcon-shared-memory-workbench
 cd contextcon-shared-memory-workbench
 # A Meko API key is needed for the live parts (free Meko account:
 # Settings > API Keys). Save it as .meko-api-key.json (0600):
@@ -116,9 +108,9 @@ python3 scripts/render_site.py       # rebuild the demo site in docs/
 - 2026-11-25 ~11:10: Phase 4 (part 1) — presentation (`presentation.md`) +
   video script (`video-script.md`) written, static demo site built in `docs/`
   (audit view, comparison, presentation, run logs). Meko account UUID redacted
-  from published run artifacts. **Repo creation BLOCKED:** connector
-  `create_repository` → 403 `POST /user/repos: Resource not accessible by
-  integration` (GitHub App token cannot create user repos; only account is
-  luozhi0129). Needs the empty public repo created in the browser first, then
-  push via the connector's `push-files`, then Pages enable (`main` / `docs`).
-  Local git commit `01e646d` holds the full 41-file snapshot, ready to push.
+  from published run artifacts. Repo creation was blocked at first
+  (connector `create_repository` → 403, GitHub App token cannot create user
+  repos) — fixed the same day: empty public repo created in the browser,
+  snapshot pushed via the connector (`bb7af0d1`, 41 files), Pages enabled
+  (`main` / `docs`). **Repo + demo link are LIVE** (see Deliverables).
+  Remaining: the ≤5 min demo video (script drafted).
